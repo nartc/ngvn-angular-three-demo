@@ -1,32 +1,73 @@
-import { Component } from '@angular/core';
+import {ThreeVector3} from "@angular-three/core";
+import {Component, Input} from '@angular/core';
+import * as THREE from 'three';
+import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
 
 @Component({
-  selector: 'app-root',
-  template: `
-    <!--The content below is only a placeholder and can be replaced.-->
-    <div style="text-align:center" class="content">
-      <h1>
-        Welcome to {{title}}!
-      </h1>
-      <span style="display: block">{{ title }} app is running!</span>
-      <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
-    </div>
-    <h2>Here are some links to help you start: </h2>
-    <ul>
-      <li>
-        <h2><a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
-      </li>
-      <li>
-        <h2><a target="_blank" rel="noopener" href="https://angular.io/cli">CLI Documentation</a></h2>
-      </li>
-      <li>
-        <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
-      </li>
-    </ul>
-    
-  `,
-  styles: []
+    selector: 'app-root',
+    template: `
+        <ngt-canvas [camera]="{fov: 60, near: 1, far: 1000, position: [400, 200, 0]}"
+                    [scene]="{fog: fog, background: background}">
+            <ngt-orbit-controls (ready)="onControlsReady($event)"
+                                (animateReady)="$event.animateObject.update()"></ngt-orbit-controls>
+
+            <ngt-directional-light color="white" [position]="[1, 1, 1]"></ngt-directional-light>
+            <ngt-directional-light color="#002288" [position]="[-1, -1, -1]"></ngt-directional-light>
+            <ngt-ambient-light color="#222222"></ngt-ambient-light>
+
+            <ngt-cylinder-geometry ngtId="cylinder" [args]="[0, 10, 30, 4, 1]"></ngt-cylinder-geometry>
+            <ngt-mesh-phong-material ngtId="phong"
+                                     [parameters]="{color: '#ffffff', flatShading: true}"></ngt-mesh-phong-material>
+            <ngt-mesh *ngFor="let position of positions"
+                      geometry="cylinder"
+                      material="phong"
+                      [position]="position"
+                      [matrixAutoUpdate]="false">
+            </ngt-mesh>
+        </ngt-canvas>
+    `,
+    styles: []
 })
 export class AppComponent {
-  title = 'test-ngt';
+    background = new THREE.Color(0xcccccc);
+    fog = new THREE.FogExp2(0xcccccc, 0.002);
+
+    positions = Array.from({length: 500}).fill(undefined).map(() => {
+        return [this.getRandomPosition(), 0, this.getRandomPosition()] as [number, number, number]
+    })
+
+    onControlsReady(controls: OrbitControls) {
+        controls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
+        controls.dampingFactor = 0.05;
+
+        controls.screenSpacePanning = false;
+
+        controls.minDistance = 100;
+        controls.maxDistance = 500;
+
+        controls.maxPolarAngle = Math.PI / 2;
+    }
+
+    private getRandomPosition() {
+        return Math.random() * 1600 - 800;
+    }
+}
+
+@Component({
+    selector: 'app-cube',
+    template: `
+        <ngt-mesh [position]="position" (animateReady)="onAnimateReady($event.animateObject)">
+            <ngt-box-geometry></ngt-box-geometry>
+            <ngt-mesh-basic-material [parameters]="{color: 'green'}"></ngt-mesh-basic-material>
+        </ngt-mesh>
+    `,
+    styles: []
+})
+export class CubeComponent {
+    @Input() position?: ThreeVector3;
+
+    onAnimateReady(animateObject: THREE.Mesh) {
+        animateObject.rotation.x += 0.03;
+        animateObject.rotation.y += 0.03;
+    }
 }
