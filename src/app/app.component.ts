@@ -6,6 +6,23 @@ import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
 @Component({
     selector: 'app-root',
     template: `
+        <ul>
+            <li>
+                <a href="https://github.com/nartc/angular-three" target="_blank" rel="noopener">Github
+                    Angular Three repo
+                </a>
+            </li>
+            <li>
+                <a href="https://github.com/nartc/ngvn-angular-three-demo" target="_blank" rel="noopener">Github
+                    Demo Repo
+                </a>
+            </li>
+            <li>
+                <a href="https://ngvn-angular-three-demo.netlify.app/" target="_blank" rel="noopener">
+                    Demo
+                </a>
+            </li>
+        </ul>
         <ngt-canvas [camera]="{fov: 60, near: 1, far: 1000, position: [400, 200, 0]}"
                     [scene]="{fog: fog, background: background}">
             <ngt-stats></ngt-stats>
@@ -27,7 +44,16 @@ import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
             </ngt-mesh>
         </ngt-canvas>
     `,
-    styles: []
+    styles: [`
+        ul {
+            list-style: none;
+        }
+
+        li {
+            text-align: right;
+            margin-right: 0.5rem;
+        }
+    `]
 })
 export class AppComponent {
     background = new THREE.Color(0xcccccc);
