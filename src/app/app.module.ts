@@ -4,6 +4,7 @@ import {ThreeBoxBufferGeometryModule, ThreeCylinderBufferGeometryModule} from "@
 import {ThreeAmbientLightModule, ThreeDirectionalLightModule} from "@angular-three/core/lights";
 import {ThreeMeshBasicMaterialModule, ThreeMeshPhongMaterialModule} from "@angular-three/core/materials";
 import {ThreeMeshModule} from "@angular-three/core/meshes";
+import {ThreeStatsModule} from "@angular-three/core/stats";
 import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 
@@ -24,7 +25,8 @@ import {AppComponent, CubeComponent} from './app.component';
         ThreeCylinderBufferGeometryModule,
         ThreeMeshPhongMaterialModule,
         ThreeDirectionalLightModule,
-        ThreeAmbientLightModule
+        ThreeAmbientLightModule,
+        ThreeStatsModule
     ],
     providers: [],
     bootstrap: [AppComponent]

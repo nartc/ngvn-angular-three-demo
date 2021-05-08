@@ -8,6 +8,7 @@ import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
     template: `
         <ngt-canvas [camera]="{fov: 60, near: 1, far: 1000, position: [400, 200, 0]}"
                     [scene]="{fog: fog, background: background}">
+            <ngt-stats></ngt-stats>
             <ngt-orbit-controls (ready)="onControlsReady($event)"
                                 (animateReady)="$event.animateObject.update()"></ngt-orbit-controls>
 
